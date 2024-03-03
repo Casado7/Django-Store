@@ -1,71 +1,105 @@
 {% extends "base_menu.html" %}
 {% block content %}
-<h1>Store</h1>
-<div style="float:right">
-<!-- https://www.w3schools.com/howto/howto_css_search_button.asp -->
-<form>
-  <input type="text" placeholder="Search.." name="search"
-  {% if search %} value="{{ search }}" {% endif %}
-  >
-  <button type="submit"><i class="fa fa-search"></i></button>
-<a href="{% url 'store:all' %}"><i class="fa fa-undo"></i></a>
-</form>
+<div class="row">
+    <h1 class="col">Store</h1>
+    <div class="col" style="text-align: right;">
+    <!-- https://www.w3schools.com/howto/howto_css_search_button.asp -->
+        <form >
+            <input type="text" placeholder="Search.." name="search"
+            {% if search %} value="{{ search }}" {% endif %}
+            >
+            <button type="submit"><i class="fa fa-search"></i></button>
+            <a href="{% url 'store:all' %}"><i class="fa fa-undo"></i></a>
+        </form>
+    </div>
 </div>
-<p>
-{% if product_list %}
-<ul>
-  {% for product in product_list %}
-    <li>
-        <a href="{% url 'store:product_detail'  product.id %}">{{ product.title }}</a>
-        {% if product.owner == user %}
-        (<a href="{% url 'store:product_update' product.id %}">Edit</a> |
-        <a href="{% url 'store:product_delete' product.id %}">Delete</a>)
-        {% endif %}
-        {% if user.is_authenticated %}
-        <!-- Two hrefs with two stacked icons each - one showing and one hidden -->
-        <a href="#" onclick=
-            "favPost('{% url 'store:product_unfavorite' product.id %}', {{ product.id }} );return false;"
-            {% if product.id not in favorites %} style="display: none;" {% endif %}
-            id="favorite_star_{{product.id}}">
-        <span class="fa-stack" style="vertical-align: middle;">
-        <i class="fa fa-star fa-stack-1x" style="color: orange;"></i>
-        <i class="fa fa-star-o fa-stack-1x"></i>
-        </span>
-        </a>
-        <!-- the second href -->
-        <a href="#" onclick=
-             "favPost('{% url 'store:product_favorite' product.id %}', {{ product.id }} );return false;"
-            {% if product.id in favorites %} style="display: none;" {% endif %}
-            id="unfavorite_star_{{product.id}}">
-        <span class="fa-stack" style="vertical-align: middle;">
-        <i class="fa fa-star fa-stack-1x" style="display: none; color: orange;"></i>
-        <i class="fa fa-star-o fa-stack-1x"></i>
-        </span>
-        </a>
-        {% endif %}
-        <div style="left:10px">
-            {% if product.text|length < 100 %}
-                {{ product.text }}
-            {% else %}
-                {{ product.text|slice:"0:99" }}
-                <a href="{% url 'well:post_detail'  post.id %}">...</a>
-            {% endif %}
+<div class="container">
+    <div class="row">
+        {% if product_list %}    
+        {% for product in product_list %}
+        <div class="col-3">
+
+                <div class="card" style="width: 100%">
+                    {% if product.content_type %}
+                    <div id="overlay" class="overlay" style="text-align: left;" >
+                        <img style="width:100%;margin-top: 0px; border:3px solid black;" src="{% url 'store:product_picture' product.id %}">
+                    </div>
+                    {% endif %}
+                    <div class="">
+
+                        <div class="card-body">
+                            <div class="card-title">
+                                <a href="{% url 'store:product_detail'  product.id %}">{{ product.title }}</a>
+                                {% if product.owner == user %}
+                                (<a href="{% url 'store:product_update' product.id %}">Edit</a> |
+                                <a href="{% url 'store:product_delete' product.id %}">Delete</a>)
+                                {% endif %}
+                            
+                            
+                                {% if user.is_authenticated %}
+                                <!-- Two hrefs with two stacked icons each - one showing and one hidden -->
+                                <a href="#" onclick=
+                                    "favPost('{% url 'store:product_unfavorite' product.id %}', {{ product.id }} );return false;"
+                                    {% if product.id not in favorites %} style="display: none;" {% endif %}
+                                    id="favorite_star_{{product.id}}">
+                                <span class="fa-stack" style="vertical-align: middle;">
+                                <i class="fa fa-star fa-stack-1x" style="color: orange;"></i>
+                                <i class="fa fa-star-o fa-stack-1x"></i>
+                                </span>
+                                </a>
+                                <!-- the second href -->
+                                <a href="#" onclick=
+                                    "favPost('{% url 'store:product_favorite' product.id %}', {{ product.id }} );return false;"
+                                    {% if product.id in favorites %} style="display: none;" {% endif %}
+                                    id="unfavorite_star_{{product.id}}">
+                                <span class="fa-stack" style="vertical-align: middle;">
+                                <i class="fa fa-star fa-stack-1x" style="display: none; color: orange;"></i>
+                                <i class="fa fa-star-o fa-stack-1x"></i>
+                                </span>
+                                </a>
+                                {% endif %}
+                            </div>
+                            <!-- 
+                            <div class="card-text">
+                                    Price: ${{ product.price }} 
+                            </div>
+                            <div class="card-text">
+                                {% if product.text|length < 100 %}
+                                    Description: {{ product.text }}
+                                {% else %}
+                                    Description: {{ product.text|slice:"0:30" }}
+                                    <a href="{% url 'well:post_detail'  post.id %}">...</a>
+                                {% endif %}
+                            </div>
+
+                            <small>
+                                {% if product.owner.username %}
+                                    posted by {{ product.owner.username }}
+                                {% endif %}
+                                {{ product.natural_updated }}
+                            </small> -->
+                        </div>
+                        <div style="text-align: center;">
+                            <a class="btn btn-success" >Add to the Cart</a>
+                        </div> 
+
+                    </div>
+                </div>
         </div>
-        <small>
-        {% if product.owner.username %}
-            posted by {{ product.owner.username }}
+        {% endfor %}
+            
+        {% else %}
+        <p>There are no products in the database.</p>
+        
         {% endif %}
-        {{ product.natural_updated }}
-        </small>
-    </li>
-  {% endfor %}
-</ul>
-{% else %}
-  <p>There are no products in the database.</p>
-{% endif %}
-</p>
+        
+    </div>
+</div>
+
+
+
 <p>
-<a href="{% url 'store:product_create' %}">Add an Ad</a> |
+<a href="{% url 'store:product_create' %}">Add an Product</a> |
 {% if user.is_authenticated %}
 <a href="{% url 'logout' %}?next={% url 'store:all' %}">Logout</a>
 {% else %}

@@ -20,7 +20,8 @@ class Product(models.Model) :
     picture = models.BinaryField(null=True, editable=True)
     content_type = models.CharField(max_length=256, null=True, help_text='The MIMEType of the file')
     favorites = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Product_Fav', related_name='favorite_products')
-
+    category = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Product_Category', related_name='category_products')
+    available = models.BooleanField(default=True)
     # Shows up in the admin list
     def __str__(self):
         return self.title
@@ -41,8 +42,6 @@ class Product_Comment(models.Model) :
         if len(self.text) < 15 : return self.text
         return self.text[:11] + ' ...'
 
-
-
 class Product_Fav(models.Model) :
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -53,3 +52,17 @@ class Product_Fav(models.Model) :
 
     def __str__(self) :
         return '%s likes %s'%(self.user.username, self.product.title[:10])
+
+
+class Product_Category(models.Model):
+    title = models.CharField(
+            max_length=50,
+            validators=[MinLengthValidator(2, "Title must be greater than 2 characters")]
+    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    def __str__(self) :
+        return self.title

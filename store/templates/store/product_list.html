@@ -1,0 +1,106 @@
+{% extends "base_menu.html" %}
+{% block content %}
+<h1>Store</h1>
+<div style="float:right">
+<!-- https://www.w3schools.com/howto/howto_css_search_button.asp -->
+<form>
+  <input type="text" placeholder="Search.." name="search"
+  {% if search %} value="{{ search }}" {% endif %}
+  >
+  <button type="submit"><i class="fa fa-search"></i></button>
+<a href="{% url 'store:all' %}"><i class="fa fa-undo"></i></a>
+</form>
+</div>
+<p>
+{% if product_list %}
+<ul>
+  {% for product in product_list %}
+    <li>
+        <a href="{% url 'store:product_detail'  product.id %}">{{ product.title }}</a>
+        {% if product.owner == user %}
+        (<a href="{% url 'store:product_update' product.id %}">Edit</a> |
+        <a href="{% url 'store:product_delete' product.id %}">Delete</a>)
+        {% endif %}
+        {% if user.is_authenticated %}
+        <!-- Two hrefs with two stacked icons each - one showing and one hidden -->
+        <a href="#" onclick=
+            "favPost('{% url 'store:product_unfavorite' product.id %}', {{ product.id }} );return false;"
+            {% if product.id not in favorites %} style="display: none;" {% endif %}
+            id="favorite_star_{{product.id}}">
+        <span class="fa-stack" style="vertical-align: middle;">
+        <i class="fa fa-star fa-stack-1x" style="color: orange;"></i>
+        <i class="fa fa-star-o fa-stack-1x"></i>
+        </span>
+        </a>
+        <!-- the second href -->
+        <a href="#" onclick=
+             "favPost('{% url 'store:product_favorite' product.id %}', {{ product.id }} );return false;"
+            {% if product.id in favorites %} style="display: none;" {% endif %}
+            id="unfavorite_star_{{product.id}}">
+        <span class="fa-stack" style="vertical-align: middle;">
+        <i class="fa fa-star fa-stack-1x" style="display: none; color: orange;"></i>
+        <i class="fa fa-star-o fa-stack-1x"></i>
+        </span>
+        </a>
+        {% endif %}
+        <div style="left:10px">
+            {% if product.text|length < 100 %}
+                {{ product.text }}
+            {% else %}
+                {{ product.text|slice:"0:99" }}
+                <a href="{% url 'well:post_detail'  post.id %}">...</a>
+            {% endif %}
+        </div>
+        <small>
+        {% if product.owner.username %}
+            posted by {{ product.owner.username }}
+        {% endif %}
+        {{ product.natural_updated }}
+        </small>
+    </li>
+  {% endfor %}
+</ul>
+{% else %}
+  <p>There are no products in the database.</p>
+{% endif %}
+</p>
+<p>
+<a href="{% url 'store:product_create' %}">Add an Ad</a> |
+{% if user.is_authenticated %}
+<a href="{% url 'logout' %}?next={% url 'store:all' %}">Logout</a>
+{% else %}
+<a href="{% url 'login' %}?next={% url 'store:all' %}">Login</a>
+{% endif %}
+</p>
+<script>
+function toggleInlineDisplay(star_id) {
+    var elem = document.getElementById(star_id);
+    if(window.getComputedStyle(elem).display == "inline") {
+        elem.style.display = 'none';
+        elem.dataset.previousDisplay = 'inline';
+    } else if(window.getComputedStyle(elem).display == "block") {
+        elem.style.display = 'none';
+        elem.dataset.previousDisplay = 'block';
+    } else {
+        console.log('prev', elem.dataset.previousDisplay);
+        if ( typeof elem.dataset.previousDisplay == 'string' ) {
+            elem.style.display = elem.dataset.previousDisplay
+        } else {
+            elem.style.display = 'inline';
+        }
+    }
+}
+
+function favPost(url, thing_id) {
+    console.log('POSTing to', url);
+    fetch(url, { method: 'POST', body: '{}' } )
+    .then((response) => {
+        console.log(url, 'finished');
+        toggleInlineDisplay("unfavorite_star_"+thing_id);
+        toggleInlineDisplay("favorite_star_"+thing_id);
+    }).catch((error) => {
+        alert('Url failed with '+error+' '+url);
+    });
+}
+</script>
+{% endblock %}

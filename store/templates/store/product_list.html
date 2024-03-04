@@ -1,10 +1,10 @@
 {% extends "base_menu.html" %}
 {% block content %}
 <div class="row">
-    <h1 class="col">Store</h1>
-    <div class="col" style="text-align: right;">
+    <h1 class="col-3">Store</h1>
+    <div class="col-9" style="text-align: right;">
     <!-- https://www.w3schools.com/howto/howto_css_search_button.asp -->
-        <form >
+        <form>
             <input type="text" placeholder="Search.." name="search"
             {% if search %} value="{{ search }}" {% endif %}
             >
@@ -19,10 +19,10 @@
         {% for product in product_list %}
         <div class="col-6 col-md-3">
 
-                <div class="card" style="width: 140px;">
+                <div class="card" style="width: 180px;">
                     {% if product.content_type %}
                     <div id="overlay" class="overlay" style="text-align: left;" >
-                        <img style="width:100%;margin-top: 0px; border:3px solid black;" src="{% url 'store:product_picture' product.id %}">
+                        <img style="width:178px;height:178px;margin-top: 0px; border:3px solid black;" src="{% url 'store:product_picture' product.id %}">
                     </div>
                     {% endif %}
                     <div class="">
@@ -30,13 +30,6 @@
                         <div class="card-body">
                             <div class="card-title">
                                 <a href="{% url 'store:product_detail'  product.id %}">{{ product.title }}</a>
-                                {% if product.owner == user %}
-                                (<a href="{% url 'store:product_update' product.id %}">Edit</a> |
-                                <a href="{% url 'store:product_delete' product.id %}">Delete</a>)
-                                {% endif %}
-                            
-                            
-                                {% if user.is_authenticated %}
                                 <!-- Two hrefs with two stacked icons each - one showing and one hidden -->
                                 <a href="#" onclick=
                                     "favPost('{% url 'store:product_unfavorite' product.id %}', {{ product.id }} );return false;"
@@ -57,12 +50,22 @@
                                 <i class="fa fa-star-o fa-stack-1x"></i>
                                 </span>
                                 </a>
+
+                                {% if product.owner == user %}
+                                (<a href="{% url 'store:product_update' product.id %}">Edit</a> |
+                                <a href="{% url 'store:product_delete' product.id %}">Delete</a>)
+                                {% endif %}
+                            
+                            
+                                {% if user.is_authenticated %}
+
                                 {% endif %}
                             </div>
-                            <!-- 
+                            
                             <div class="card-text">
                                     Price: ${{ product.price }} 
                             </div>
+                            <!-- 
                             <div class="card-text">
                                 {% if product.text|length < 100 %}
                                     Description: {{ product.text }}

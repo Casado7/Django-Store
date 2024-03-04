@@ -28,7 +28,7 @@ def subtract_product(request, product_id):
 
     return redirect("store")
 
-def clear_cart(request, product_id):
+def clear_cart(request):
     
     cart= Cart(request)
     cart.clear_cart()

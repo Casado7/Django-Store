@@ -14,12 +14,12 @@
     </div>
 </div>
 <div class="container">
-    <div class="row">
+    <div class="row align-items-start" >
         {% if product_list %}    
         {% for product in product_list %}
-        <div class="col-2">
+        <div class="col-6 col-md-3">
 
-                <div class="card" style="width: 100%">
+                <div class="card" style="width: 140px;">
                     {% if product.content_type %}
                     <div id="overlay" class="overlay" style="text-align: left;" >
                         <img style="width:100%;margin-top: 0px; border:3px solid black;" src="{% url 'store:product_picture' product.id %}">

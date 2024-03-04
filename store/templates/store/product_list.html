@@ -13,16 +13,16 @@
         </form>
     </div>
 </div>
+
 <div class="container">
     <div class="row align-items-start" >
         {% if product_list %}    
         {% for product in product_list %}
         <div class="col-6 col-md-3">
-
-                <div class="card" style="width: 170px;">
+                <div class="card" style="width: 170px;margin-top: 10px;">
                     {% if product.content_type %}
-                    <div id="overlay" class="overlay" style="text-align: left;" >
-                        <img style="width:168px;height:168px;margin-top: 0px; border:3px solid black;" src="{% url 'store:product_picture' product.id %}">
+                    <div id="overlay" class="card-img-top" style="text-align: left;" >
+                        <img style="width:168px;height:168px;margin-top: 0px; border:0px solid black;" src="{% url 'store:product_picture' product.id %}">
                     </div>
                     {% endif %}
                     <div class="">
@@ -50,21 +50,22 @@
                                 <i class="fa fa-star-o fa-stack-1x"></i>
                                 </span>
                                 </a>
-
+                            <div  class="card-subtitle mb-2 text-muted">
+                                    Price: ${{ product.price }} 
+                            </div>
+                            <div class="card-link">
                                 {% if product.owner == user %}
                                 (<a href="{% url 'store:product_update' product.id %}">Edit</a> |
                                 <a href="{% url 'store:product_delete' product.id %}">Delete</a>)
                                 {% endif %}
-                            
+                            </div>
                             
                                 {% if user.is_authenticated %}
 
                                 {% endif %}
                             </div>
                             
-                            <div class="card-text">
-                                    Price: ${{ product.price }} 
-                            </div>
+
                             <!-- 
                             <div class="card-text">
                                 {% if product.text|length < 100 %}
@@ -81,10 +82,11 @@
                                 {% endif %}
                                 {{ product.natural_updated }}
                             </small> -->
+                            <div style="text-align: center;">
+                                <a class="btn btn-success" >Add to the Cart</a>
+                            </div> 
                         </div>
-                        <div style="text-align: center;">
-                            <a class="btn btn-success" >Add to the Cart</a>
-                        </div> 
+
 
                     </div>
                 </div>
@@ -100,7 +102,7 @@
 </div>
 
 
-
+<!--
 <p>
 <a href="{% url 'store:product_create' %}">Add an Product</a> |
 {% if user.is_authenticated %}
@@ -108,7 +110,7 @@
 {% else %}
 <a href="{% url 'login' %}?next={% url 'store:all' %}">Login</a>
 {% endif %}
-</p>
+</p>-->
 <script>
 function toggleInlineDisplay(star_id) {
     var elem = document.getElementById(star_id);

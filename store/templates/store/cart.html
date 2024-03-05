@@ -1,0 +1,44 @@
+<table class="table table table-striped table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Product</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% if request.session.cart.items %}
+            {% for key, value in request.session.cart.items %}
+                <tr>
+                    <td>{{value.title}}</td>
+                    <td>
+                        <a href="{% url "cart:subtract_product" value.product_id %}"class="btn btn-sm btn-success">-</a>
+                        {{value.quantity}}
+                        <a href="{% url "cart:add_product" value.product_id %}"class="btn btn-sm btn-success">+</a>
+                    </td>
+                    <td>{{value.price}}</td>
+                </tr>
+
+            {% endfor %}
+                <tr>
+                    <td colspan="3">Total: ${{total_cart}}</td>
+                </tr>            
+        {% else %}
+            <tr>
+                <td colspan="3">
+                    <div class="alert alert-danger text-center">
+                        Empty Cart
+                    </div>
+                </td>
+            </tr>
+
+        {% endif %}
+    </tbody>
+
+
+
+
+
+</table>
+

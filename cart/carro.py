@@ -4,7 +4,7 @@ class Cart:
         self.session=request.session
         cart=self.session.get("cart")
         if not cart:
-            cart=self.session["cart"] ={}
+            cart=self.cart ={}
         else: 
             self.cart=cart
     
@@ -20,7 +20,9 @@ class Cart:
         else:
             for key, value in self.cart.items():
                 if key == str(product.id):
-                    value["cantidad"] = value["cantidad"]+1
+                    value["quantity"] = value["quantity"]+1
+                    value["price"] = float(value["price"])+float(product.price)
+
                     break
         self.save_cart()
 
@@ -38,9 +40,10 @@ class Cart:
     def subtract(self, product):
         for key, value in self.cart.items():
             if key == str(product.id):
-                value["cantidad"] = value["cantidad"]-1
-                if value["cantidad"<1]:
-                    self.eliminar(product)
+                value["quantity"] = value["quantity"]-1
+                value["price"] = float(value["price"])-float(product.price)
+                if value["quantity"]<1:
+                    self.delete(product)
                 break
         self.save_cart()
 

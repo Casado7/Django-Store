@@ -78,6 +78,7 @@ TEMPLATES = [
                 'home.context_processors.settings',      # Add
                 'social_django.context_processors.backends',  # Add
                 'social_django.context_processors.login_redirect', # Add
+                "cart.context_processor.total_cart",
             ],
         },
     },

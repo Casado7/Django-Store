@@ -16,7 +16,7 @@
 
 <div class="container">
     <div style="float:right;">
-        <p>dasda</p>
+        {% include "store/cart.html" %}
     </div>
     <div class="row align-items-start" >
         {% if product_list %}    
@@ -86,7 +86,7 @@
 
                         </div>
                         <div class="card-footer text-center">
-                            <a href="#"class="btn btn-success" >Add to the Cart</a>
+                            <a href="{% url "cart:add_product" product.id %}"class="btn btn-sm btn-success" >Add to the Cart</a>
                         </div> 
 
 

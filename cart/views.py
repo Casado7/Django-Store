@@ -10,7 +10,7 @@ def add_product(request, product_id):
     product=Product.objects.get(id=product_id)
     cart.add(product=product)
 
-    return redirect("store")
+    return redirect("store:all")
 
 def delete_product(request, product_id):
     
@@ -18,7 +18,7 @@ def delete_product(request, product_id):
     product=Product.objects.get(id=product_id)
     cart.delete(product=product)
 
-    return redirect("store")
+    return redirect("store:all")
 
 def subtract_product(request, product_id):
     
@@ -26,11 +26,11 @@ def subtract_product(request, product_id):
     product=Product.objects.get(id=product_id)
     cart.subtract(product=product)
 
-    return redirect("store")
+    return redirect("store:all")
 
 def clear_cart(request):
     
     cart= Cart(request)
     cart.clear_cart()
 
-    return redirect("store")
+    return redirect("store:all")

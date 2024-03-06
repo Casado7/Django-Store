@@ -9,6 +9,7 @@ from django.utils.decorators import method_decorator
 from django.db.utils import IntegrityError
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 from store.models import Product, Product_Comment, Product_Fav
 from store.owner import OwnerListView, OwnerDetailView, OwnerCreateView, OwnerUpdateView, OwnerDeleteView
@@ -32,9 +33,15 @@ class ProductListView(OwnerListView):
             query.add(Q(text__icontains=strval), Q.OR)
             query.add(Q(tags__name__in=[strval]), Q.OR)
             product_list = Product.objects.filter(query).select_related().distinct().order_by('-updated_at')[:10]
+            paginator = Paginator(product_list, 4)  # Show 4 contacts per page.
+            page_number = request.GET.get("page")
+            page_obj = paginator.get_page(page_number)
         else :
             product_list = Product.objects.all().order_by('-updated_at')[:10]
-        for obj in product_list:
+            paginator = Paginator(product_list, 4)  # Show 4 contacts per page.
+            page_number = request.GET.get("page")
+            page_obj = paginator.get_page(page_number)
+        for obj in page_obj:
             obj.natural_updated = naturaltime(obj.updated_at)
         favorites = list()
         if request.user.is_authenticated:
@@ -42,7 +49,7 @@ class ProductListView(OwnerListView):
             rows = request.user.favorite_products.values('id')
             # favorites = [2, 4, ...] using list comprehension
             favorites = [ row['id'] for row in rows ]
-        ctx = {'product_list' : product_list, 'favorites': favorites, 'search': strval}
+        ctx = {'product_list' : product_list, 'favorites': favorites, 'search': strval, "page_obj":page_obj}
         return render(request, self.template_name, ctx)
 
     # By convention:

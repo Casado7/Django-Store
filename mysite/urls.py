@@ -25,6 +25,7 @@ urlpatterns = [
     path('', include('home.urls')),  # Change to ads.urls
     path('ads', include('ads.urls')),
     path('store', include('store.urls')),
+    path('order', include('Orders.urls')),
     path('cart', include('cart.urls')),
     path('admin/', admin.site.urls),  # Keep
     path('accounts/', include('django.contrib.auth.urls')),  # Keep

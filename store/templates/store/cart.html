@@ -22,8 +22,13 @@
 
             {% endfor %}
                 <tr>
-                    <td colspan="3">Total: ${{total_cart}}</td>
-                </tr>            
+                    <td colspan="2">Total: ${{total_cart}}</td>
+                    {% if user.is_authenticated %}
+                    <td colspan="" class="justify-content-center">
+                        <a href="{% url "Orders:process_order"%}"class="btn btn-sm btn-success">Buy</a>
+                    </td>
+                    {% endif %}
+                </tr>                 
         {% else %}
             <tr>
                 <td colspan="3">

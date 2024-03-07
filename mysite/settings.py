@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'ads.apps.AdsConfig',
     'store.apps.StoreConfig',
     "cart.apps.CartConfig",
+    "Orders.apps.OrdersConfig",
     # Sample Applications - don't copy
 ]
 

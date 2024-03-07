@@ -9,9 +9,9 @@
       <li {% if request.get_full_path == x %}class="active"{% endif %}>
           <a class="nav-link text-light" href="{% url 'store:all' %}" role="button">Store</a>
       </li>
-      <li {% if request.get_full_path == x %}class="active"{% endif %}>
+      <!--<li {% if request.get_full_path == x %}class="active"{% endif %}>
         <a class="nav-link text-light" href="{% url 'store:all' %}" role="button">Cart</a>
-    </li>
+    </li>-->
     </ul>
     <ul class="navbar-nav">
       {% if user.is_authenticated %}
